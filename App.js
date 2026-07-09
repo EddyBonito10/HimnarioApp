@@ -343,6 +343,18 @@ export default function App() {
                 );
               })}
             </ScrollView>
+          
+
+            {/* --- PEGA EL NUEVO CÓDIGO AQUÍ --- */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colores.botonBg, padding: 10, borderRadius: 8, marginBottom: 15 }}>
+              <Ionicons name="save-outline" size={20} color={colores.botonTexto} />
+              <Text style={{ color: colores.textoPrincipal, fontSize: 13, marginLeft: 8, flex: 1 }}>
+                Tus listas y favoritos se guardan automáticamente en este dispositivo.
+              </Text>
+            </View>
+            {/* --------------------------------- */}
+
+            <View style={styles.crearListaContenedor}>
           </View>
 
           <TextInput
