@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity, SafeAreaView, ScrollView, Share, Modal, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import himnarioData from './himnario.json'; 
 
 let detectoCoritos = false;
@@ -25,6 +25,43 @@ export default function App() {
   const [modoOscuro, setModoOscuro] = useState(false);
   
   const [repertorios, setRepertorios] = useState({ 'Favoritos': [] });
+  const [datosCargados, setDatosCargados] = useState(false); // <-- NUEVO ESTADO
+
+  // 1. CARGAR DATOS: Se ejecuta una sola vez cuando la app se abre
+  useEffect(() => {
+    const cargarRepertorios = async () => {
+      try {
+        const memoria = await AsyncStorage.getItem('mis_repertorios');
+        if (memoria !== null) {
+          // Si hay datos guardados, los convertimos de texto a código y los usamos
+          setRepertorios(JSON.parse(memoria));
+        }
+      } catch (error) {
+        console.log("Error al cargar la memoria: ", error);
+      } finally {
+        setDatosCargados(true); // Le decimos a la app que ya revisó el disco duro
+      }
+    };
+    
+    cargarRepertorios();
+  }, []);
+
+  // 2. GUARDAR DATOS: Se ejecuta en automático cada vez que modificas una lista
+  useEffect(() => {
+    // Solo guardamos si la app ya terminó de cargar, para no sobreescribir por error
+    if (datosCargados) {
+      const guardarRepertorios = async () => {
+        try {
+          // Convertimos las listas a texto y las guardamos en el disco duro
+          await AsyncStorage.setItem('mis_repertorios', JSON.stringify(repertorios));
+        } catch (error) {
+          console.log("Error al guardar en memoria: ", error);
+        }
+      };
+      
+      guardarRepertorios();
+    }
+  }, [repertorios, datosCargados]);
   const [modalVisible, setModalVisible] = useState(false);
   const [cantoParaLista, setCantoParaLista] = useState(null);
   const [nuevaListaNombre, setNuevaListaNombre] = useState('');
