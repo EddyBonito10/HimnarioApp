@@ -25,43 +25,39 @@ export default function App() {
   const [modoOscuro, setModoOscuro] = useState(false);
   
   const [repertorios, setRepertorios] = useState({ 'Favoritos': [] });
-  const [datosCargados, setDatosCargados] = useState(false); // <-- NUEVO ESTADO
+  const [datosCargados, setDatosCargados] = useState(false);
 
-  // 1. CARGAR DATOS: Se ejecuta una sola vez cuando la app se abre
+  // 1. CARGAR DATOS
   useEffect(() => {
     const cargarRepertorios = async () => {
       try {
         const memoria = await AsyncStorage.getItem('mis_repertorios');
         if (memoria !== null) {
-          // Si hay datos guardados, los convertimos de texto a código y los usamos
           setRepertorios(JSON.parse(memoria));
         }
       } catch (error) {
         console.log("Error al cargar la memoria: ", error);
       } finally {
-        setDatosCargados(true); // Le decimos a la app que ya revisó el disco duro
+        setDatosCargados(true);
       }
     };
-    
     cargarRepertorios();
   }, []);
 
-  // 2. GUARDAR DATOS: Se ejecuta en automático cada vez que modificas una lista
+  // 2. GUARDAR DATOS
   useEffect(() => {
-    // Solo guardamos si la app ya terminó de cargar, para no sobreescribir por error
     if (datosCargados) {
       const guardarRepertorios = async () => {
         try {
-          // Convertimos las listas a texto y las guardamos en el disco duro
           await AsyncStorage.setItem('mis_repertorios', JSON.stringify(repertorios));
         } catch (error) {
           console.log("Error al guardar en memoria: ", error);
         }
       };
-      
       guardarRepertorios();
     }
   }, [repertorios, datosCargados]);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [cantoParaLista, setCantoParaLista] = useState(null);
   const [nuevaListaNombre, setNuevaListaNombre] = useState('');
@@ -195,7 +191,7 @@ export default function App() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colores.fondo }]}>
       
-      {/* MODAL DE REPERTORIOS (Ya sin la basurita aquí) */}
+      {/* --- MODAL DE REPERTORIOS --- */}
       <Modal visible={modalVisible} transparent={true} animationType="fade">
         <View style={[styles.modalFondo, { backgroundColor: colores.modalOverlay }]}>
           <View style={[styles.modalCaja, { backgroundColor: colores.tarjeta, borderColor: colores.borde }]}>
@@ -212,6 +208,14 @@ export default function App() {
                 );
               })}
             </ScrollView>
+
+            {/* AVISO DE GUARDADO (Ahora sí, en su lugar correcto) */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colores.botonBg, padding: 10, borderRadius: 8, marginBottom: 15 }}>
+              <Ionicons name="save-outline" size={20} color={colores.botonTexto} />
+              <Text style={{ color: colores.textoPrincipal, fontSize: 13, marginLeft: 8, flex: 1 }}>
+                Tus listas y favoritos se guardan automáticamente en este dispositivo.
+              </Text>
+            </View>
 
             <View style={styles.crearListaContenedor}>
               <TextInput 
@@ -298,11 +302,9 @@ export default function App() {
             </TouchableOpacity>
           </View>
           
-          {/* NUEVO: Pestañas con la basurita integrada */}
           <View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.contenedorFiltrosScroll}>
               {pestanasNavegacion.map(opcion => {
-                // Identificamos cuáles son las listas principales que NO se pueden borrar
                 const esFiltroBase = ['todos', 'congregacionales', 'coritos', 'Favoritos'].includes(opcion);
                 
                 return (
@@ -326,7 +328,6 @@ export default function App() {
                       {opcion.charAt(0).toUpperCase() + opcion.slice(1)}
                     </Text>
                     
-                    {/* Basurita solo para las listas personalizadas */}
                     {!esFiltroBase && (
                       <TouchableOpacity 
                         onPress={() => confirmarEliminarLista(opcion)}
@@ -343,18 +344,6 @@ export default function App() {
                 );
               })}
             </ScrollView>
-          
-
-            {/* --- PEGA EL NUEVO CÓDIGO AQUÍ --- */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colores.botonBg, padding: 10, borderRadius: 8, marginBottom: 15 }}>
-              <Ionicons name="save-outline" size={20} color={colores.botonTexto} />
-              <Text style={{ color: colores.textoPrincipal, fontSize: 13, marginLeft: 8, flex: 1 }}>
-                Tus listas y favoritos se guardan automáticamente en este dispositivo.
-              </Text>
-            </View>
-            {/* --------------------------------- */}
-
-            <View style={styles.crearListaContenedor}>
           </View>
 
           <TextInput
@@ -389,7 +378,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 45 },
+  container: { 
+    flex: 1, 
+    paddingTop: Platform.OS === 'web' ? 10 : 45,
+    maxWidth: Platform.OS === 'web' ? 600 : '100%',
+    width: '100%',
+    alignSelf: 'center',
+  },
   cabeceraPrincipal: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 15 },
   saludo: { fontSize: 14, fontStyle: 'italic' },
   tituloApp: { fontSize: 22, fontWeight: 'bold', marginTop: 2 },
