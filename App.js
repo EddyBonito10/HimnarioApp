@@ -380,11 +380,11 @@ export default function App() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    paddingTop: Platform.OS === 'web' ? 10 : 45,
+    paddingTop: Platform.OS === 'web' ? 35 : 45, // Aumentamos el margen superior para web
     maxWidth: Platform.OS === 'web' ? 600 : '100%',
     width: '100%',
-    alignSelf: 'center',
-    height: Platform.OS === 'web' ? '100vh' : '100%',
+    alignSelf: 'center'
+    // Eliminamos la regla de 'height' que cortaba la pantalla
   },
   cabeceraPrincipal: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 15 },
   saludo: { fontSize: 14, fontStyle: 'italic' },
