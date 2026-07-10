@@ -377,14 +377,15 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { 
+container: { 
     flex: 1, 
-    paddingTop: Platform.OS === 'web' ? 35 : 45, // Aumentamos el margen superior para web
+    paddingTop: Platform.OS === 'web' ? 20 : 45,
     maxWidth: Platform.OS === 'web' ? 600 : '100%',
     width: '100%',
-    alignSelf: 'center'
-    // Eliminamos la regla de 'height' que cortaba la pantalla
+    alignSelf: 'center',
+    // La magia dinámica para los navegadores de celular:
+    height: Platform.OS === 'web' ? '100dvh' : '100%',
+    overflow: 'hidden', // Esto bloquea el scroll de la página y fuerza a que solo la lista se mueva
   },
   cabeceraPrincipal: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 15 },
   saludo: { fontSize: 14, fontStyle: 'italic' },
