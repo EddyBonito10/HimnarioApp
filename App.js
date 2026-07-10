@@ -209,7 +209,7 @@ export default function App() {
               })}
             </ScrollView>
 
-            {/* AVISO DE GUARDADO (Ahora sí, en su lugar correcto) */}
+            {/* AVISO DE GUARDADO */}
             <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colores.botonBg, padding: 10, borderRadius: 8, marginBottom: 15 }}>
               <Ionicons name="save-outline" size={20} color={colores.botonTexto} />
               <Text style={{ color: colores.textoPrincipal, fontSize: 13, marginLeft: 8, flex: 1 }}>
@@ -239,7 +239,7 @@ export default function App() {
 
       {/* --- PANTALLA DE LECTURA --- */}
       {cantoSeleccionado ? (
-        <>
+        <View style={{ flex: 1, width: '100%' }}>
           <View style={styles.barraSuperior}>
             <TouchableOpacity style={[styles.botonRegresar, { backgroundColor: colores.botonBg }]} onPress={() => setCantoSeleccionado(null)}>
               <Ionicons name="arrow-back" size={20} color={colores.botonTexto} />
@@ -288,10 +288,10 @@ export default function App() {
               {formatearLetra(cantoSeleccionado.letra)}
             </Text>
           </ScrollView>
-        </>
+        </View>
       ) : (
         /* --- PANTALLA PRINCIPAL --- */
-        <>
+        <View style={{ flex: 1, width: '100%' }}>
           <View style={styles.cabeceraPrincipal}>
             <View>
               <Text style={[styles.saludo, { color: colores.textoSecundario }]}>¡Paz de Cristo hermano!</Text>
@@ -302,7 +302,7 @@ export default function App() {
             </TouchableOpacity>
           </View>
           
-          <View>
+          <View style={{ marginBottom: 5 }}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.contenedorFiltrosScroll}>
               {pestanasNavegacion.map(opcion => {
                 const esFiltroBase = ['todos', 'congregacionales', 'coritos', 'Favoritos'].includes(opcion);
@@ -371,7 +371,7 @@ export default function App() {
               </TouchableOpacity>
             )}
           />
-        </>
+        </View>
       )}
     </SafeAreaView>
   );
@@ -384,6 +384,7 @@ const styles = StyleSheet.create({
     maxWidth: Platform.OS === 'web' ? 600 : '100%',
     width: '100%',
     alignSelf: 'center',
+    height: Platform.OS === 'web' ? '100vh' : '100%',
   },
   cabeceraPrincipal: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 15 },
   saludo: { fontSize: 14, fontStyle: 'italic' },
