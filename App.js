@@ -377,7 +377,8 @@ export default function App() {
   );
 }
 
-container: { 
+const styles = StyleSheet.create({
+  container: { 
     flex: 1, 
     paddingTop: Platform.OS === 'web' ? 20 : 45,
     maxWidth: Platform.OS === 'web' ? 600 : '100%',
